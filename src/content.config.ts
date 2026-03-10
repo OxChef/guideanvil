@@ -8,6 +8,7 @@ const guides = defineCollection({
     title: z.string(),
     description: z.string(),
     game: z.string(),
+    slug: z.string(),
     category: z.string().optional(),
     tags: z.array(z.string()).optional(),
     pubDate: z.coerce.date(),

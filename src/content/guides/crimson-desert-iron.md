@@ -1,7 +1,8 @@
 ---
 title: "How to Get Iron in Crimson Desert"
 description: "Complete guide on where to find iron early in Crimson Desert."
-game: "Crimson Desert"
+game: "crimson-desert"
+slug: "how-to-get-iron"
 category: "Crafting"
 tags:
   - iron
