@@ -9,14 +9,14 @@ const guides = defineCollection({
     description: z.string(),
     game: z.string(),
     slug: z.string(),
-    category: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+    category: z.string(),
+    tags: z.array(z.string()).default([]),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
-    draft: z.boolean().default(false),
-  }),
+    draft: z.boolean().default(false)
+  })
 });
 
 export const collections = {
-  guides,
+  guides
 };
