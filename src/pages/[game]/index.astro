@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides", ({ data }) => !data.draft);
+
+  const games = [...new Set(guides.map((guide) => guide.data.game))];
+
+  return games.map((game) => ({
+    params: { game },
+    props: {
+      game,
+      guides: guides.filter((guide) => guide.data.game === game),
+    },
+  }));
+}
+
+const { game, guides } = Astro.props;
+const prettyGameName = game
+  .split("-")
+  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  .join(" ");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{prettyGameName} Guides | GuideAnvil</title>
+    <meta
+      name="description"
+      content={`Guides, crafting help, builds and walkthroughs for ${prettyGameName}.`}
+    />
+  </head>
+  <body style="font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem;">
+    <p><a href="/">Back to home</a></p>
+
+    <h1>{prettyGameName} Guides</h1>
+    <p>Browse all current guides for {prettyGameName}.</p>
+
+    <ul>
+      {guides.map((guide) => (
+        <li>
+          <a href={`/${guide.data.game}/${guide.data.slug}`}>{guide.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </body>
+</html>
