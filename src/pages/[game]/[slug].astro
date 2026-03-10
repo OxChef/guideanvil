@@ -4,16 +4,22 @@ import { getCollection, render } from "astro:content";
 export async function getStaticPaths() {
   const guides = await getCollection("guides", ({ data }) => !data.draft);
 
-  return guides.map((guide) => ({
-    params: {
-      game: guide.data.game,
-      slug: guide.data.slug,
-    },
-    props: { guide },
-  }));
+  return guides.map((guide) => {
+    const relatedGuides = guides.filter(
+      (g) => g.data.game === guide.data.game && g.data.slug !== guide.data.slug
+    );
+
+    return {
+      params: {
+        game: guide.data.game,
+        slug: guide.data.slug,
+      },
+      props: { guide, relatedGuides },
+    };
+  });
 }
 
-const { guide } = Astro.props;
+const { guide, relatedGuides } = Astro.props;
 const { Content } = await render(guide);
 
 const prettyGameName = guide.data.game
@@ -62,6 +68,19 @@ const prettyGameName = guide.data.game
     <ul>
       {guide.data.tags.map((tag) => (
         <li>{tag}</li>
+      ))}
+    </ul>
+
+    <hr />
+
+    <h3>Related Guides</h3>
+    <ul>
+      {relatedGuides.slice(0, 5).map((related) => (
+        <li>
+          <a href={`/${related.data.game}/${related.data.slug}`}>
+            {related.data.title}
+          </a>
+        </li>
       ))}
     </ul>
   </body>
