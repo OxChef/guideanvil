@@ -11,6 +11,7 @@ const guides = defineCollection({
     slug: z.string(),
     category: z.string(),
     tags: z.array(z.string()).default([]),
+    relatedSlugs: z.array(z.string()).default([]),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     draft: z.boolean().default(false)

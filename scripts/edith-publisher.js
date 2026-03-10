@@ -55,9 +55,15 @@ const description = String(input.description).trim();
 const game = slugify(input.game);
 const slug = slugify(input.slug);
 const category = String(input.category).trim();
+
 const tags = Array.isArray(input.tags)
   ? input.tags.map((t) => String(t).trim()).filter(Boolean)
   : [];
+
+const relatedSlugs = Array.isArray(input.relatedSlugs)
+  ? input.relatedSlugs.map((s) => String(s).trim()).filter(Boolean)
+  : [];
+
 const draft = input.draft === true;
 const today = new Date().toISOString().slice(0, 10);
 
@@ -93,6 +99,8 @@ slug: "${slug}"
 category: "${escapeYamlString(category)}"
 tags:
 ${tags.length ? tags.map((tag) => `  - ${tag}`).join("\n") : "  - guide"}
+relatedSlugs:
+${relatedSlugs.length ? relatedSlugs.map((item) => `  - ${item}`).join("\n") : "  - "}
 pubDate: ${today}
 updatedDate: ${today}
 draft: ${draft ? "true" : "false"}
