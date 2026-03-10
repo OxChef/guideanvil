@@ -1,17 +1,52 @@
 ---
+import { getCollection } from "astro:content";
 
+const guides = await getCollection("guides", ({ data }) => !data.draft);
+
+const games = [...new Set(guides.map((guide) => guide.data.game))].sort();
+
+function prettyGameName(game: string) {
+  return game
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GuideAnvil</title>
+    <meta
+      name="description"
+      content="Gaming guides, builds, crafting help, boss guides and walkthroughs."
+    />
+  </head>
+  <body style="font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem;">
+    <h1>GuideAnvil</h1>
+    <p>Scalable gaming guides built for search.</p>
+
+    <h2>Games</h2>
+    <ul>
+      {games.map((game) => (
+        <li>
+          <a href={`/${game}`}>{prettyGameName(game)}</a>
+        </li>
+      ))}
+    </ul>
+
+    <h2>Latest Guides</h2>
+    <ul>
+      {guides
+        .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+        .slice(0, 10)
+        .map((guide) => (
+          <li>
+            <a href={`/${guide.data.game}/${guide.data.slug}`}>{guide.data.title}</a>
+          </li>
+        ))}
+    </ul>
+  </body>
 </html>
